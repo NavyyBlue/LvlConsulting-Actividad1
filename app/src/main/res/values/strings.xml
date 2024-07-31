@@ -1,0 +1,12 @@
+<resources>
+    <!--    Login-->
+    <string name="app_name">JIRA Atllassian</string>
+    <string name="connector">a </string>
+    <string name="welcome">¡Te damos la bienvenida!</string>
+    <string name="greetings_login">Hola, inicia sesión para continuar</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="remember_me">Recordarme</string>
+    <string name="forgot_password">Olvidé mi contraseña</string>
+    <string name="login">Iniciar sesión</string>
+</resources>
