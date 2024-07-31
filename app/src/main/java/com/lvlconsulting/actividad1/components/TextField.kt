@@ -1,5 +1,6 @@
 package com.lvlconsulting.actividad1.components
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -24,16 +25,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lvlconsulting.actividad1.ui.theme.BrandColor
+import com.lvlconsulting.actividad1.ui.theme.Geologica
 import com.lvlconsulting.actividad1.ui.theme.SecondaryColor
+import com.lvlconsulting.actividad1.ui.theme.TextColor
 
 @Composable
 fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
+    padding: Int? = null,
+    readOnly: Boolean? = false,
     modifier: Modifier = Modifier,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -59,7 +65,7 @@ fun CustomTextField(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 16.dp)
+                    .padding(start = padding?.dp ?: 16.dp)
             )
         }
         OutlinedTextField(
@@ -73,11 +79,13 @@ fun CustomTextField(
                     )
                 }
             },
+            readOnly = readOnly ?: false,
             textStyle = TextStyle(
-                fontSize = 16.sp,
+                fontSize = 16.sp, fontFamily = Geologica, color = TextColor
             ),
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,
+            leadingIcon = leadingIcon,
             keyboardOptions = keyboardOptions,
             modifier = Modifier
                 .fillMaxWidth()

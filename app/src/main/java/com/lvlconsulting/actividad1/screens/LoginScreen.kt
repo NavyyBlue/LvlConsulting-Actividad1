@@ -1,5 +1,7 @@
 package com.lvlconsulting.actividad1.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -42,20 +45,33 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.lvlconsulting.actividad1.R
 import com.lvlconsulting.actividad1.components.CustomTextField
+import com.lvlconsulting.actividad1.repository.UserRepository
 import com.lvlconsulting.actividad1.ui.theme.BrandColor
 import com.lvlconsulting.actividad1.ui.theme.SecondaryColor
-
+import com.lvlconsulting.actividad1.ui.theme.TextColor
+import com.lvlconsulting.actividad1.viewmodel.LoginViewModel
+import com.lvlconsulting.actividad1.viewmodel.LoginViewModelFactory
 
 @Composable
-fun LoginScreenContent() {
-
+fun LoginScreenContent(userRepository: UserRepository, navController: NavHostController) {
+    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(userRepository))
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     var isChecked by remember { mutableStateOf(true) }
     val logo = painterResource(id = R.drawable.logo)
+
+    loginViewModel.loginResult = { user ->
+        if (user != null) {
+            navController.navigate("home/${user.firstName}/${user.lastName}/${user.jobTitle}/${user.id}")
+        } else {
+            println("Invalid credentials")
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -78,14 +94,16 @@ fun LoginScreenContent() {
             Text(
                 text = stringResource(id = R.string.welcome),
                 fontSize = 22.sp,
+                color = TextColor
             )
             Text(
                 text = buildAnnotatedString {
-                    append(stringResource(id = R.string.connector))
-                    withStyle(style = SpanStyle(color = BrandColor)) {
-                        append(stringResource(id = R.string.app_name))
+                    withStyle(style = SpanStyle(color = TextColor)) {
+                        append(stringResource(id = R.string.connector))
                     }
-                    append("!")
+                    withStyle(style = SpanStyle(color = BrandColor)) {
+                        append(" "+stringResource(id = R.string.app_name)+"!")
+                    }
                 },
                 fontSize = 22.sp,
             )
@@ -100,7 +118,7 @@ fun LoginScreenContent() {
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = stringResource(id =R.string.email),
+                label = stringResource(id = R.string.email),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -155,7 +173,7 @@ fun LoginScreenContent() {
                             checkmarkColor = Color.White
                         )
                     )
-                    Text(stringResource(id = R.string.remember_me), fontSize = 14.sp)
+                    Text(stringResource(id = R.string.remember_me), fontSize = 14.sp, color = TextColor)
                 }
 
                 TextButton(onClick = { }) {
@@ -166,7 +184,7 @@ fun LoginScreenContent() {
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
-                onClick = { },
+                onClick = { loginViewModel.login(email, password) },
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -174,7 +192,7 @@ fun LoginScreenContent() {
             ) {
                 Text(
                     text = stringResource(id = R.string.login),
-                    fontSize = 16.sp,
+                    fontSize = 16.sp, color = Color.White,
                     modifier = Modifier.padding(15.dp)
                 )
             }
