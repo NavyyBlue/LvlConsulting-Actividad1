@@ -162,7 +162,7 @@ fun HomeScreen(
                 },
                 containerColor = BrandColor
             ) {
-                Icon(Icons.Default.Add, contentDescription = null)
+                Icon(Icons.Default.Add, tint = Color.White, contentDescription = null)
             }
         },
         floatingActionButtonPosition = FabPosition.End,

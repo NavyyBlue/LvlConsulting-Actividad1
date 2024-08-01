@@ -2,11 +2,11 @@ package com.lvlconsulting.actividad1.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,77 +43,94 @@ fun AdvancedSearchDialog(onDismiss: () -> Unit) {
                 .padding(16.dp)
                 .border(1.dp, Color.Transparent, RoundedCornerShape(12.dp))
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                Text(
-                    text = stringResource(id = R.string.search_advanced),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = TextColor,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                CustomTextField(
-                    value = projectCode,
-                    onValueChange = { projectCode = it },
-                    label = stringResource(id = R.string.project_code)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = stringResource(id = R.string.project_name)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomTextField(
-                    value = status,
-                    onValueChange = { status = it },
-                    label = stringResource(id = R.string.project_status)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomTextField(
-                    value = category,
-                    onValueChange = { category = it },
-                    label = stringResource(id = R.string.project_category)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CustomTextField(
-                    value = projectIcon,
-                    onValueChange = { projectIcon = it },
-                    label = stringResource(id = R.string.project_icon)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DatePickerField(
-                    label = stringResource(id = R.string.project_start_date),
-                    onDateSelected = { startDate = it },
-                    selectedDate = startDate
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DatePickerField(
-                    label = stringResource(id = R.string.project_end_date),
-                    onDateSelected = { endDate = it },
-                    selectedDate = endDate
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomButton(
-                    text = stringResource(id = R.string.search_hint),
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = BrandColor,
-                    contentColor = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomButton(
-                    text = stringResource(id = R.string.clean_hint),
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.Transparent,
-                    contentColor = BrandColor
-                )
+                item {
+                    Text(
+                        text = stringResource(id = R.string.search_advanced),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = TextColor,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+                item {
+                    CustomTextField(
+                        value = projectCode,
+                        onValueChange = { projectCode = it },
+                        label = stringResource(id = R.string.project_code)
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    CustomTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = stringResource(id = R.string.project_name)
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    CustomTextField(
+                        value = status,
+                        onValueChange = { status = it },
+                        label = stringResource(id = R.string.project_status)
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    CustomTextField(
+                        value = category,
+                        onValueChange = { category = it },
+                        label = stringResource(id = R.string.project_category)
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    CustomTextField(
+                        value = projectIcon,
+                        onValueChange = { projectIcon = it },
+                        label = stringResource(id = R.string.project_icon)
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    DatePickerField(
+                        label = stringResource(id = R.string.project_start_date),
+                        onDateSelected = { startDate = it },
+                        selectedDate = startDate
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(8.dp)) }
+                item {
+                    DatePickerField(
+                        label = stringResource(id = R.string.project_end_date),
+                        onDateSelected = { endDate = it },
+                        selectedDate = endDate
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                item {
+                    CustomButton(
+                        text = stringResource(id = R.string.search_hint),
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = BrandColor,
+                        contentColor = Color.White
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                item {
+                    CustomButton(
+                        text = stringResource(id = R.string.clean_hint),
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Color.Transparent,
+                        contentColor = BrandColor
+                    )
+                }
             }
         }
     }

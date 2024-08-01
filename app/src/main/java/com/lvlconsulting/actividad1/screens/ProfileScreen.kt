@@ -4,12 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -101,121 +102,122 @@ fun ProfileScreen(navController: NavController, userId: Long, userRepository: Us
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(
-                top = innerPadding.calculateTopPadding(),
-                start = 16.dp,
-                end = 16.dp
-            )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.profile),
-                    contentDescription = "Profile Image",
+            item {
+                Box(
                     modifier = Modifier
                         .size(100.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray),
-                    contentScale = ContentScale.Crop
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profile Image",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .background(Color.Gray),
+                        contentScale = ContentScale.Crop
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit Icon",
+                        tint = BrandColor,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .align(Alignment.BottomEnd)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .padding(4.dp)
+                            .clickable { navController.navigate("edit_profile") }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = stringResource(id = R.string.profile_name),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
-                Icon(
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = "Edit Icon",
-                    tint = BrandColor,
-                    modifier = Modifier
-                        .size(30.dp)
-                        .align(Alignment.BottomEnd)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .padding(4.dp)
-                        .clickable { navController.navigate("edit_profile") }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = stringResource(id = R.string.profile_last_name),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = companyName,
+                    onValueChange = { companyName = it },
+                    label = stringResource(id = R.string.company_name),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = jobTitle,
+                    onValueChange = { jobTitle = it },
+                    label = stringResource(id = R.string.job_title),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = stringResource(id = R.string.profile_phone),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = stringResource(id = R.string.email),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                CustomButton(
+                    text = stringResource(id = R.string.save_button),
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = BrandColor,
+                    contentColor = Color.White
                 )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = stringResource(id = R.string.profile_name),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = lastName,
-                onValueChange = { lastName = it },
-                label = stringResource(id = R.string.profile_last_name),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = companyName,
-                onValueChange = { companyName = it },
-                label = stringResource(id = R.string.company_name),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = jobTitle,
-                onValueChange = { jobTitle = it },
-                label = stringResource(id = R.string.job_title),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                label = stringResource(id = R.string.profile_phone),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = stringResource(id = R.string.email),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Done
-                )
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            CustomButton(
-                text = stringResource(id = R.string.save_button),
-                onClick = { },
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = BrandColor,
-                contentColor = Color.White
-            )
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -76,7 +77,6 @@ fun CreateProjectScreen(
     projectRepository: ProjectRepository,
     navController: NavHostController
 ) {
-
     val viewModel: ProjectViewModel =
         viewModel(factory = ProjectViewModelFactory(projectRepository))
     val context = LocalContext.current
@@ -85,7 +85,6 @@ fun CreateProjectScreen(
     var startDate by remember { mutableStateOf("") }
     var endDate by remember { mutableStateOf("") }
     var shareWithOthers by remember { mutableStateOf(false) }
-
     var selectedStatus by remember { mutableStateOf("") }
     val statusOptions = listOf(
         stringResource(id = R.string.planning_status),
@@ -93,12 +92,9 @@ fun CreateProjectScreen(
         stringResource(id = R.string.in_review_status),
         stringResource(id = R.string.completed_status)
     )
-
     var expanded by remember { mutableStateOf(false) }
-
     var selectedIcon by remember { mutableIntStateOf(R.drawable.icon_1) }
     var showIconDialog by remember { mutableStateOf(false) }
-
     val iconOptions = listOf(
         R.drawable.icon_1,
         R.drawable.icon_2,
@@ -108,7 +104,6 @@ fun CreateProjectScreen(
         R.drawable.icon_6,
         R.drawable.icon_7
     )
-
     val iconNames = listOf(
         "Folder",
         "Insurance",
@@ -144,235 +139,236 @@ fun CreateProjectScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text(
-                text = stringResource(id = R.string.project_icon),
-                style = MaterialTheme.typography.bodyMedium,
-                color = TextColor
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                Text(
+                    text = stringResource(id = R.string.project_icon),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextColor
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(54.dp)
-                        .border(1.dp, LightGrayColor, shape = RoundedCornerShape(12.dp))
-                        .background(Color.White, shape = RoundedCornerShape(12.dp))
-                        .clickable { showIconDialog = true },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = selectedIcon),
-                        contentDescription = "Project icon",
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(54.dp)
+                            .border(1.dp, LightGrayColor, shape = RoundedCornerShape(12.dp))
+                            .background(Color.White, shape = RoundedCornerShape(12.dp))
+                            .clickable { showIconDialog = true },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = selectedIcon),
+                            contentDescription = "Project icon",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.random_icon),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = SecondaryColor
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        IconButton(onClick = {
+                            selectedIcon = iconOptions.random()
+                        }) {
+                            Icon(
+                                Icons.Filled.Autorenew,
+                                tint = BrandColor,
+                                contentDescription = "Random icon"
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CustomTextField(
+                    value = projectName,
+                    onValueChange = { projectName = it },
+                    label = stringResource(id = R.string.create_project_name),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                CustomTextField(
+                    value = projectDescription,
+                    onValueChange = { projectDescription = it },
+                    label = stringResource(id = R.string.create_project_description),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
+                ) {
+                    CustomTextField(
+                        value = selectedStatus,
+                        onValueChange = { selectedStatus = it },
+                        label = stringResource(id = R.string.create_project_status),
+                        readOnly = true,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "Expand menu",
+                                tint = BrandColor,
+                                modifier = Modifier.clickable { expanded = !expanded }
+                            )
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        statusOptions.forEach { status ->
+                            DropdownMenuItem(
+                                text = { Text(text = status) },
+                                onClick = {
+                                    selectedStatus = status
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                DatePickerField(
+                    label = stringResource(id = R.string.project_start_date),
+                    selectedDate = startDate,
+                    onDateSelected = { startDate = it }
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                DatePickerField(
+                    label = stringResource(id = R.string.project_end_date),
+                    selectedDate = endDate,
+                    onDateSelected = { endDate = it }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = stringResource(id = R.string.random_icon),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = SecondaryColor
+                        text = stringResource(id = R.string.question_share_project),
+                        color = SecondaryColor,
+                        fontSize = 14.sp
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    IconButton(onClick = {
-                        selectedIcon = iconOptions.random()
-                    }) {
-                        Icon(
-                            Icons.Filled.Autorenew,
-                            tint = BrandColor,
-                            contentDescription = "Random icon"
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Switch(
+                        checked = shareWithOthers,
+                        onCheckedChange = { shareWithOthers = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = BrandColor,
+                            checkedTrackColor = BrandColor.copy(alpha = 0.5f)
                         )
-                    }
+                    )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-            CustomTextField(
-                value = projectName,
-                onValueChange = { projectName = it },
-                label = stringResource(id = R.string.create_project_name),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            CustomTextField(
-                value = projectDescription,
-                onValueChange = { projectDescription = it },
-                label = stringResource(id = R.string.create_project_description),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
-            ) {
-                CustomTextField(
-                    value = selectedStatus,
-                    onValueChange = { selectedStatus = it },
-                    label = stringResource(id = R.string.create_project_status),
-                    readOnly = true,
-                    trailingIcon = {
-                        Icon(
-                            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                            contentDescription = "Expand menu",
-                            tint = BrandColor,
-                            modifier = Modifier.clickable { expanded = !expanded }
-                        )
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    statusOptions.forEach { status ->
-                        DropdownMenuItem(
-                            text = { Text(text = status) },
-                            onClick = {
-                                selectedStatus = status
-                                expanded = false
+                CustomButton(
+                    text = stringResource(id = R.string.create_project),
+                    onClick = {
+                        viewModel.createProject(
+                            userId = userId,
+                            projectName = projectName,
+                            projectDescription = projectDescription,
+                            startDate = startDate,
+                            endDate = endDate,
+                            shareWithOthers = shareWithOthers,
+                            selectedStatus = selectedStatus,
+                            selectedIcon = selectedIcon,
+                            onSuccess = {
+                                navController.popBackStack()
+                            },
+                            onError = { errorMessage ->
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                             }
                         )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            DatePickerField(
-                label = stringResource(id = R.string.project_start_date),
-                selectedDate = startDate,
-                onDateSelected = { startDate = it }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            DatePickerField(
-                label = stringResource(id = R.string.project_end_date),
-                selectedDate = endDate,
-                onDateSelected = { endDate = it }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.question_share_project),
-                    color = SecondaryColor,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Switch(
-                    checked = shareWithOthers,
-                    onCheckedChange = { shareWithOthers = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = BrandColor,
-                        checkedTrackColor = BrandColor.copy(alpha = 0.5f)
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            CustomButton(
-                text = stringResource(id = R.string.create_project),
-                onClick = {
-                    viewModel.createProject(
-                        userId = userId,
-                        projectName = projectName,
-                        projectDescription = projectDescription,
-                        startDate = startDate,
-                        endDate = endDate,
-                        shareWithOthers = shareWithOthers,
-                        selectedStatus = selectedStatus,
-                        selectedIcon = selectedIcon,
-                        onSuccess = {
-                            navController.popBackStack()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = BrandColor,
-                contentColor = Color.White
-            )
-
-            if (showIconDialog) {
-                AlertDialog(
-                    onDismissRequest = { showIconDialog = false },
-                    title = {
-                        Text(
-                            text = stringResource(id = R.string.select_icon),
-                            fontSize = 20.sp,
-                            color = TextColor
-                        )
                     },
-                    text = {
-                        Column {
-                            iconOptions.forEachIndexed { index, icon ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            selectedIcon = icon
-                                            showIconDialog = false
-                                        }
-                                        .padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = icon),
-                                        contentDescription = "Icon",
-                                        modifier = Modifier.size(30.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(text = iconNames[index], color = TextColor)
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = BrandColor,
+                    contentColor = Color.White
+                )
+
+                if (showIconDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showIconDialog = false },
+                        title = {
+                            Text(
+                                text = stringResource(id = R.string.select_icon),
+                                fontSize = 20.sp,
+                                color = TextColor
+                            )
+                        },
+                        text = {
+                            Column {
+                                iconOptions.forEachIndexed { index, icon ->
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                selectedIcon = icon
+                                                showIconDialog = false
+                                            }
+                                            .padding(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = icon),
+                                            contentDescription = "Icon",
+                                            modifier = Modifier.size(30.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(text = iconNames[index], color = TextColor)
+                                    }
                                 }
                             }
-                        }
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = { showIconDialog = false },
-                            colors = ButtonDefaults.buttonColors(containerColor = BrandColor)
-                        ) {
-                            Text(text = stringResource(id = R.string.close), color = Color.White)
-                        }
-                    },
-                    containerColor = BackgroundColor
-                )
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = { showIconDialog = false },
+                                colors = ButtonDefaults.buttonColors(containerColor = BrandColor)
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.close),
+                                    color = Color.White
+                                )
+                            }
+                        },
+                        containerColor = BackgroundColor
+                    )
+                }
             }
-
-
         }
-
     }
 }
-
