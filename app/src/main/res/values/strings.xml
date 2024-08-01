@@ -9,4 +9,52 @@
     <string name="remember_me">Recordarme</string>
     <string name="forgot_password">Olvidé mi contraseña</string>
     <string name="login">Iniciar sesión</string>
+    <string name="invalid_credentials">Credenciales inválidas</string>
+
+    <!--    Home-->
+    <string name="search_label">Buscar en tableros</string>
+    <string name="table_title">Tableros</string>
+    <string name="search_advanced">Búsqueda avanzada</string>
+    <string name="project_code">Código del proyecto</string>
+    <string name="project_name">Nombre</string>
+    <string name="project_status">Estado</string>
+    <string name="project_category">Categoría</string>
+    <string name="project_icon">Ícono del proyecto</string>
+    <string name="project_start_date">Fecha de inicio</string>
+    <string name="project_end_date">Fecha de finalización</string>
+    <string name="search_hint">Buscar</string>
+    <string name="clean_hint">Limpiar</string>
+
+    <!--    Create Project-->
+    <string name="new_project">Nuevo proyecto</string>
+    <string name="random_icon">Cambiar icono aleatorio</string>
+    <string name="create_project_name">Nombre del proyecto</string>
+    <string name="create_project_description">Descripción</string>
+    <string name="create_project_status">Estado del proyecto</string>
+    <string name="question_share_project">¿Compartir con otros miembros?</string>
+    <string name="select_icon">Seleccionar ícono</string>
+    <string name="close">Cerrar</string>
+    <string name="create_project">Crear proyecto</string>
+
+    <!--    Profile-->
+    <string name="profile">Mi Perfil</string>
+    <string name="profile_name">Nombres</string>
+    <string name="profile_last_name">Apellidos</string>
+    <string name="company_name">Nombre de la empresa</string>
+    <string name="job_title">Cargo en la empresa</string>
+    <string name="profile_phone">Teléfono</string>
+    <string name="save_button">Guardar</string>
+
+    <!--    Edit Photo-->
+    <string name="edit_photo">Editar</string>
+    <string name="make_photo">Hacer foto</string>
+    <string name="gallery">Galería</string>
+    <string name="delete_photo">Eliminar</string>
+
+    <!--    Project Status-->
+    <string name="planning_status">PLANIFICACIÓN</string>
+    <string name="in_progress_status">EN CURSO</string>
+    <string name="in_review_status">EN REVISIÓN</string>
+    <string name="completed_status">FINALIZADO</string>
+
 </resources>

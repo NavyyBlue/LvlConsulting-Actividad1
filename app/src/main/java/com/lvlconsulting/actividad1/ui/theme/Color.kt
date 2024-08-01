@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val BackgroundColor = Color(0xFFF9F8FD)
+val BackgroundIconColor = Color(0xFFF4F9FF)
 val BrandColor = Color(0xFF2684FF)
 val SecondaryColor = Color(0xFF8C8C8C)
 val TextColor = Color(0xFF232529)

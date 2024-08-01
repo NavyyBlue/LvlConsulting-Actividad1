@@ -35,7 +35,12 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        if (projectName.isBlank() || projectDescription.isBlank() || startDate.isBlank() || endDate.isBlank() || selectedStatus.isBlank()) {
+        if (projectName.isBlank()
+            || projectDescription.isBlank()
+            || startDate.isBlank()
+            || endDate.isBlank()
+            || selectedStatus.isBlank()
+        ) {
             onError("Se requieren todos los campos")
             return
         }

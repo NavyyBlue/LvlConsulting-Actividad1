@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,8 +21,9 @@ import com.lvlconsulting.actividad1.model.User
 import com.lvlconsulting.actividad1.repository.ProjectRepository
 import com.lvlconsulting.actividad1.repository.UserRepository
 import com.lvlconsulting.actividad1.screens.CreateProjectScreen
+import com.lvlconsulting.actividad1.screens.EditPhotoScreen
 import com.lvlconsulting.actividad1.screens.HomeScreen
-import com.lvlconsulting.actividad1.screens.LoginScreenContent
+import com.lvlconsulting.actividad1.screens.LoginScreen
 import com.lvlconsulting.actividad1.screens.ProfileScreen
 import com.lvlconsulting.actividad1.ui.theme.Actividad1Theme
 import kotlinx.coroutines.launch
@@ -50,16 +52,15 @@ class MainActivity : ComponentActivity() {
             }
         }
         lifecycleScope.launch {
-            // Initialize database with required data
             if (userDao.getAllUsers().isEmpty()) {
                 val userId = userDao.insert(
                     User(
-                        firstName = "John",
-                        lastName = "Doe",
-                        companyName = "Company",
-                        jobTitle = "Developer",
-                        phoneNumber = "1234567890",
-                        email = "usuario@gmail.com",
+                        firstName = "Miguel Ángel",
+                        lastName = "Liberato Carmín",
+                        companyName = "LVL Consulting",
+                        jobTitle = "CEO LVL Consulting",
+                        phoneNumber = "+51 987654321",
+                        email = "miguelliberato@gmail.com",
                         password = "1234",
                         photoUri = "path/to/photo"
                     )
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         userId = userId,
                         name = "Project 1",
                         description = "Description of Project 1",
-                        status = "In Progress",
+                        status = "EN CURSO",
                         startDate = Date(),
                         endDate = Date(),
                         shareWithOthers = true,
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                         userId = userId,
                         name = "Project 2",
                         description = "Description of Project 2",
-                        status = "In Progress",
+                        status = "FINALIZADO",
                         startDate = Date(),
                         endDate = Date(),
                         shareWithOthers = true,
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
                         userId = 2,
                         name = "Project 2",
                         description = "Description of Project 2",
-                        status = "In Progress",
+                        status = "EN REVISIÓN",
                         startDate = Date(),
                         endDate = Date(),
                         shareWithOthers = true,
@@ -108,10 +109,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController, userRepository: UserRepository, projectRepository: ProjectRepository) {
+fun AppNavHost(
+    navController: NavHostController,
+    userRepository: UserRepository,
+    projectRepository: ProjectRepository
+) {
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
-            LoginScreenContent(userRepository, navController)
+            LoginScreen(userRepository, navController)
         }
         composable("home/{firstName}/{lastName}/{jobTitle}/{userId}") { backStackEntry ->
             val firstName = backStackEntry.arguments?.getString("firstName") ?: ""
@@ -124,8 +129,12 @@ fun AppNavHost(navController: NavHostController, userRepository: UserRepository,
             val userId = backStackEntry.arguments?.getString("userId")?.toLong() ?: 0L
             CreateProjectScreen(userId, projectRepository, navController)
         }
-        composable("profile"){
-            ProfileScreen(navController =navController)
+        composable("profile/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toLong() ?: 0L
+            ProfileScreen(navController, userId, userRepository)
+        }
+        composable("edit_profile") {
+            EditPhotoScreen()
         }
     }
 }

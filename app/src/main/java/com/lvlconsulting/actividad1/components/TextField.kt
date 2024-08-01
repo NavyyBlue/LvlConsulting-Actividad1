@@ -1,6 +1,5 @@
 package com.lvlconsulting.actividad1.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,8 +62,8 @@ fun CustomTextField(
         if (value.isEmpty() && !isFocused) {
             Text(
                 text = label,
-                color = Color.Gray,
-                fontSize = 16.sp,
+                color = SecondaryColor,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = padding?.dp ?: 16.dp)
@@ -75,13 +76,17 @@ fun CustomTextField(
                 if (value.isNotEmpty() || isFocused) {
                     Text(
                         text = label,
-                        color = if (isFocused) BrandColor else SecondaryColor,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = BrandColor,
                     )
                 }
             },
             readOnly = readOnly ?: false,
             textStyle = TextStyle(
-                fontSize = 16.sp, fontFamily = Geologica, color = TextColor
+                fontSize = 14.sp,
+                fontFamily = Geologica,
+                fontWeight = FontWeight.W400,
+                color = TextColor
             ),
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,

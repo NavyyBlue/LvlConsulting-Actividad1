@@ -2,7 +2,6 @@ package com.lvlconsulting.actividad1.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,19 +20,18 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,18 +46,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.lvlconsulting.actividad1.R
+import com.lvlconsulting.actividad1.components.AdvancedSearchDialog
+import com.lvlconsulting.actividad1.components.BoardCard
 import com.lvlconsulting.actividad1.components.CustomTextField
 import com.lvlconsulting.actividad1.repository.ProjectRepository
 import com.lvlconsulting.actividad1.ui.theme.BrandColor
@@ -89,10 +86,12 @@ fun HomeScreen(
         viewModel(factory = ProjectViewModelFactory(projectRepository))
     val projects by projectViewModel.projects.collectAsState()
 
-    // Load projects for the logged-in user
     remember { projectViewModel.loadProjectsByUserId(userId) }
 
     var searchQuery by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+
+    val filteredProjects = projects.filter { it.name.contains(searchQuery, ignoreCase = true) }
 
     Scaffold(
         topBar = {
@@ -109,10 +108,10 @@ fun HomeScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable(onClick = { navController.navigate("profile") })
+                            modifier = Modifier.clickable(onClick = { navController.navigate("profile/${userId}") })
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.profile), // Reemplaza con tu recurso de imagen
+                                painter = painterResource(id = R.drawable.profile),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
@@ -120,17 +119,24 @@ fun HomeScreen(
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
+                            val firstWordOfFirstName = firstName.split(" ").firstOrNull() ?: ""
+                            val firstWordOfLastName = lastName.split(" ").firstOrNull() ?: ""
+
                             Column {
                                 Text(
-                                    "$firstName $lastName",
-                                    fontSize = 22.sp,
+                                    "$firstWordOfFirstName $firstWordOfLastName",
+                                    style = MaterialTheme.typography.titleLarge,
                                     color = TextColor,
                                     fontWeight = FontWeight.Bold
                                 )
-                                Text(jobTitle, fontSize = 14.sp, color = SecondaryColor)
+                                Text(
+                                    jobTitle,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = SecondaryColor
+                                )
                             }
                         }
-                        IconButton(onClick = { /* Acción de notificación */ }) {
+                        IconButton(onClick = { }) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
@@ -138,7 +144,7 @@ fun HomeScreen(
                                     .border(1.dp, LightGrayColor, CircleShape)
                             ) {
                                 Icon(
-                                    Icons.Default.Notifications,
+                                    Icons.Filled.Notifications,
                                     tint = BrandColor,
                                     contentDescription = null
                                 )
@@ -172,7 +178,7 @@ fun HomeScreen(
                 CustomTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    label = "Buscar en tableros",
+                    label = stringResource(id = R.string.search_label),
                     padding = 48,
                     leadingIcon = {
                         Icon(
@@ -185,7 +191,8 @@ fun HomeScreen(
                         Icon(
                             Icons.Filled.Tune,
                             tint = BrandColor,
-                            contentDescription = null
+                            contentDescription = null,
+                            modifier = Modifier.clickable { showDialog = true }
                         )
                     },
                     keyboardOptions = KeyboardOptions(
@@ -196,83 +203,42 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Boards Section
-                Text("Tableros", fontSize = 20.sp, color = TextColor, fontWeight = FontWeight.Bold)
+                Text(
+                    stringResource(id = R.string.table_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TextColor,
+                    fontWeight = FontWeight.Bold
+                )
+
                 Spacer(modifier = Modifier.height(8.dp))
 
-                println("Projects: $projects")
-                // Boards Grid
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                    items(projects) { project ->
+                    items(filteredProjects) { project ->
                         BoardCard(
                             iconResId = project.iconResId,
                             title = project.name,
                             code = project.description,
                             status = project.status,
                             statusColor = when (project.status) {
-                                "PLANIFICACIÓN" -> PlanningStatusColor
-                                "EN CURSO" -> InProgressStatusColor
-                                "EN REVISIÓN" -> InReviewStatusColor
-                                "FINALIZADO" -> CompletedStatusColor
+                                stringResource(id = R.string.planning_status) -> PlanningStatusColor
+                                stringResource(id = R.string.in_progress_status) -> InProgressStatusColor
+                                stringResource(id = R.string.in_review_status) -> InReviewStatusColor
+                                stringResource(id = R.string.completed_status) -> CompletedStatusColor
                                 else -> Color.Gray
                             }
                         )
                     }
                 }
             }
+            if (showDialog) {
+                AdvancedSearchDialog(onDismiss = { showDialog = false })
+            }
         }
     )
 }
 
-@Composable
-fun BoardCard(
-    iconResId: Int,
-    title: String,
-    code: String,
-    status: String,
-    statusColor: Color
-) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Image(
-                painter = painterResource(id = iconResId),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                title,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Text(code, fontSize = 14.sp, color = Color.Gray, textAlign = TextAlign.Center)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = status,
-                color = TextColor,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .background(statusColor, shape = RoundedCornerShape(8.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
-    }
-}

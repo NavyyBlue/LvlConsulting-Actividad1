@@ -33,18 +33,18 @@ val Typography = Typography(
     ),
     displaySmall = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+        fontWeight = FontWeight.W500,
+        fontSize = 12.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Normal,
-        fontSize = 20.sp
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontWeight = FontWeight.W400,
+        fontSize = 14.sp
     ),
     bodySmall = TextStyle(
         fontFamily = Geologica,
@@ -63,32 +63,32 @@ val Typography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+        fontWeight = FontWeight.W500,
+        fontSize = 22.sp
     ),
     titleMedium = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp
+        fontWeight = FontWeight.W500,
+        fontSize = 20.sp
     ),
     titleSmall = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontWeight = FontWeight.W500,
+        fontSize = 18.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.W600,
         fontSize = 20.sp
     ),
     labelMedium = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.W400,
         fontSize = 16.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Geologica,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontWeight = FontWeight.W400,
+        fontSize = 12.sp
     )
 )
